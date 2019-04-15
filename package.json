@@ -1,0 +1,17 @@
+{
+  "name": "example-pact-consumer",
+  "version": "1.0.0",
+  "description": "Pact Consumer ",
+  "main": "index.js",
+  "repository": "https://github.com/azazi-sa/example-pact-consumer.git",
+  "author": "Ram ",
+  "license": "MIT",
+  "scripts": {
+    "test": "jest"
+  },
+  "dependencies": {
+    "@pact-foundation/pact": "^8.2.0",
+    "axios": "^0.18.0",
+    "jest": "^24.7.1"
+  }
+}
