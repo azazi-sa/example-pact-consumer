@@ -1,0 +1,38 @@
+{
+  "consumer": {
+    "name": "Web"
+  },
+  "provider": {
+    "name": "EmployeeService"
+  },
+  "interactions": [
+    {
+      "description": "a request for employees",
+      "providerState": "i have a list of employees",
+      "request": {
+        "method": "GET",
+        "path": "/employees",
+        "headers": {
+          "Accept": "application/json"
+        }
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": [
+          {
+            "id": "1",
+            "employee": "Bhagwan Ram: The God"
+          }
+        ]
+      }
+    }
+  ],
+  "metadata": {
+    "pactSpecification": {
+      "version": "2.0.0"
+    }
+  }
+}
