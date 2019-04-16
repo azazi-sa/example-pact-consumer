@@ -98,6 +98,41 @@ describe("Pact Tests for Employee Service", () => {
         });
     });
 
+    describe('Create an employee', () => {
+        beforeEach(() => {
+            return provider.addInteraction({
+                state: "creating an employee",
+                uponReceiving: "a request for creating an employee",
+                withRequest: {
+                    method: "PUT",
+                    path: "/employees",
+                    headers: {Accept: "application/json", "Content-Type": "application/json"},
+                    body: { Name: 'Ram Shinde' }
+                },
+                willRespondWith: {
+                    status: 200,
+                    headers: {"Content-Type": "application/json"},
+                    body: { Id: "1" }
+                }
+            });
+        });
+
+        it("lists all the employees", done => {
+            const url = `${BASE_URL}/employees`;
+            const method = "PUT";
+            const headers = {Accept: "application/json", "Content-Type": "application/json"};
+            const body = JSON.stringify({Name: 'Ram Shinde'});
+            fetch(url, {method, headers, body})
+                .then(response => response.json())
+                .then(employee => {
+                    expect(typeof employee).toEqual('object');
+                    expect(employee.Id).toEqual("1");
+                })
+                .then(() => done())
+                .catch((err) => done(err));
+        });
+    });
+
     afterAll(() => {
         return provider.finalize();
     });
