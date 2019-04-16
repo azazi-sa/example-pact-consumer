@@ -1,70 +1,104 @@
 const path = require("path");
-const { Pact } = require("@pact-foundation/pact");
+const {Pact} = require("@pact-foundation/pact");
 const fetch = require("node-fetch");
 
 const MOCK_SERVER_PORT = 9009;
 
+const BASE_URL = `http://localhost:${MOCK_SERVER_PORT}`;
+
 describe("Pact Tests for Employee Service", () => {
-  const provider = new Pact({
-    consumer: "Web",
-    provider: "EmployeeService",
-    port: MOCK_SERVER_PORT,
-    log: path.resolve(process.cwd(), "logs", "pact.log"),
-    dir: path.resolve(process.cwd(), "pacts"),
-    logLevel: "INFO",
-    spec: 2,
-    cors: false
-  });
+    const provider = new Pact({
+        consumer: "Web",
+        provider: "EmployeeService",
+        port: MOCK_SERVER_PORT,
+        log: path.resolve(process.cwd(), "logs", "pact.log"),
+        dir: path.resolve(process.cwd(), "pacts"),
+        logLevel: "INFO",
+        spec: 2,
+        cors: false
+    });
 
-  beforeEach(done => {
-    provider
-      .setup()
-      .then(() => {
-        return provider.addInteraction({
-          state: "i have a list of employees",
-          uponReceiving: "a request for employees",
-          withRequest: {
-            method: "GET",
-            path: "/employees",
-            headers: { Accept: "application/json" }
-          },
-          willRespondWith: {
-            status: 200,
-            headers: { "Content-Type": "application/json" },
-            body: [
-              {
-                id: "1",
-                employee: "Bhagwan Ram: The God"
-              }
-            ]
-          }
+    beforeAll(done => {
+        provider.setup().then(() => done())
+    });
+
+    describe('Fetch all employees', () => {
+        beforeEach(() => {
+            return provider.addInteraction({
+                state: "i have a list of employees",
+                uponReceiving: "a request for employees",
+                withRequest: {
+                    method: "GET",
+                    path: "/employees",
+                    headers: {Accept: "application/json"}
+                },
+                willRespondWith: {
+                    status: 200,
+                    headers: {"Content-Type": "application/json"},
+                    body: [
+                        {
+                            Id: "1",
+                            Name: "Ram Shinde"
+                        }
+                    ]
+                }
+            });
         });
-      })
-      .then(() => {
-        done();
-      });
-  });
 
-  afterEach(() => {
-    return provider.finalize();
-  });
+        it("lists all the employees", done => {
+            const url = `${BASE_URL}/employees`;
+            const method = "GET";
+            const headers = {Accept: "application/json"};
+            fetch(url, {method, headers})
+                .then(response => response.json())
+                .then(employees => {
+                    expect(Array.isArray(employees)).toEqual(true);
+                    expect(employees[0].Id).toEqual("1");
+                    expect(employees[0].Name).toEqual('Ram Shinde');
+                })
+                .then(() => done())
+                .catch((err) => done(err));
+        });
+    });
 
-  it("lists all the employees", done => {
-    fetch(`http://localhost:${MOCK_SERVER_PORT}/employees`, {
-      method: "GET",
-      headers: { Accept: "application/json" }
-    })
-      .then(employees => {
-        expect(employees).toEqual(
-          expect.arrayContaining([
-            {
-              id: "1",
-              employee: "Bhagwan Ram: The God"
-            }
-          ])
-        );
-        expect(provider.verify()).not.toThrow();
-      })
-      .catch(() => done());
-  });
+    describe('Fetch employee', () => {
+        beforeEach(() => {
+            return provider.addInteraction({
+                state: "i have an employee detail",
+                uponReceiving: "a request for an employee",
+                withRequest: {
+                    method: "GET",
+                    path: "/employees/1",
+                    headers: {Accept: "application/json"}
+                },
+                willRespondWith: {
+                    status: 200,
+                    headers: {"Content-Type": "application/json"},
+                    body: {
+                        Id: "1",
+                        Name: "Ram Shinde"
+                    }
+                }
+            });
+        });
+
+        it("lists all the employees", done => {
+            const url = `${BASE_URL}/employees/1`;
+            const method = "GET";
+            const headers = {Accept: "application/json"};
+            fetch(url, {method, headers})
+                .then(response => response.json())
+                .then(employee => {
+                    expect(typeof employee).toEqual('object');
+                    expect(employee.Id).toEqual("1");
+                    expect(employee.Name).toEqual('Ram Shinde');
+                })
+                .then(() => done())
+                .catch((err) => done(err));
+        });
+    });
+
+    afterAll(() => {
+        return provider.finalize();
+    });
 });

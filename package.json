@@ -7,7 +7,8 @@
   "author": "Ram ",
   "license": "MIT",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "test:publish": "node publish.js"
   },
   "dependencies": {
     "@pact-foundation/pact": "^8.2.0",
