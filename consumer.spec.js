@@ -34,7 +34,7 @@ describe("Pact Tests for Employee Service", () => {
                 },
                 willRespondWith: {
                     status: 200,
-                    headers: {"Content-Type": "application/json"},
+                    headers: {"Content-Type": "application/json; charset=utf-8"},
                     body: [
                         {
                             Id: "1",
@@ -73,7 +73,7 @@ describe("Pact Tests for Employee Service", () => {
                 },
                 willRespondWith: {
                     status: 200,
-                    headers: {"Content-Type": "application/json"},
+                    headers: {"Content-Type": "application/json; charset=utf-8"},
                     body: {
                         Id: "1",
                         Name: "Ram Shinde"
@@ -111,7 +111,7 @@ describe("Pact Tests for Employee Service", () => {
                 },
                 willRespondWith: {
                     status: 200,
-                    headers: {"Content-Type": "application/json"},
+                    headers: {"Content-Type": "application/json; charset=utf-8"},
                     body: { Id: "1" }
                 }
             });
@@ -146,7 +146,7 @@ describe("Pact Tests for Employee Service", () => {
                 },
                 willRespondWith: {
                     status: 200,
-                    headers: {"Content-Type": "application/json"},
+                    headers: {"Content-Type": "application/json; charset=utf-8"},
                     body: { Id: "1", Name: 'Ram Shinde' }
                 }
             });
