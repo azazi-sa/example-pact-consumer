@@ -39,7 +39,8 @@ describe("Pact Tests for Employee Service", () => {
                         {
                             Id: "1",
                             Name: "Ram Shinde",
-                            EmailId: "ramshinde@gmail.com"
+                            EmailId: "ramshinde@gmail.com",
+                            City: "Pune"
                         }
                     ]
                 }
@@ -57,6 +58,7 @@ describe("Pact Tests for Employee Service", () => {
                     expect(employees[0].Id).toEqual("1");
                     expect(employees[0].Name).toEqual('Ram Shinde');
                     expect(employees[0].EmailId).toEqual('ramshinde@gmail.com');
+                    expect(employees[0].City).toEqual('Pune');
                 })
                 .then(() => done())
                 .catch((err) => done(err));
